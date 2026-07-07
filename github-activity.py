@@ -12,17 +12,14 @@ def get_user_profile(username):
         return None
 
 def print_user_profile(profile):
-    print("===== GitHub User Profile =====")
-    print(f"{'Name:':<10} {profile["name"]}")
-    if profile["bio"] == None: pass 
-    else: print(f"{'Bio:':<10} {profile["bio"]}") 
-    if profile["location"] == None: pass 
-    else: print(f"{'Location:':<10} {profile["location"]}")
+    print("======== GitHub User Profile ========")
+    print(f"{'Name:':<10} {profile['name'] or profile['login']}")
+    if profile["bio"]: print(f"{'Bio:':<10} {profile["bio"]}") 
+    if profile["location"]: print(f"{'Location:':<10} {profile["location"]}")
     print(f"{'Repos:':<10} {profile["public_repos"]}")
     print(f"{'Followers:':<10} {profile["followers"]}")
-    if profile["blog"] == "": pass 
-    else: print(f"{'Blog:':<10} {profile["blog"]}")
-    print("================================")
+    print(f"{'Following:':<10} {profile["following"]}")
+    if profile["blog"]: print(f"{'Blog:':<10} {profile["blog"]}")
 
 
 def get_user_info(username):
@@ -34,7 +31,10 @@ def get_user_info(username):
         print(f"An error occurred: {err}")
         return None
 
-
+def print_user_info(info):
+    print("=========== User Activity ===========")
+    for event in info:
+        print(format_event(event))
 
 def format_event(event):
     event_type = event["type"]
@@ -64,21 +64,37 @@ def format_event(event):
     else:
         return f"- {event_type} in {repo_name}"
 
-
-
-if __name__ == "__main__":
-
+def print_activity():
     args = sys.argv
 
     if len(args) < 2:
         print("Usage: github-activity <username>")
         sys.exit(1)
-
+    
     username = args[1]
-    user_info = get_user_info(username)
-    user_profile = get_user_profile(username)
-    print_user_profile(user_profile)
-"""     print(json.dumps(user_profile, indent=4))
-    for event in user_profile:
-        print(event) """
+
+    if len(args) == 2:
+        user_profile = get_user_profile(username)
+        user_info = get_user_info(username)
+        print_user_profile(user_profile)
+        print_user_info(user_info)
+        if not user_info:
+            print("No activity found")
+
+    elif len(args) == 3:
+        command = args[2]
+        user_info = get_user_info(username)
+        output_check = False
+        print(f"=========== User {command} Activity ===========")
+        for event in user_info:
+            if event["type"] == command:
+                print(format_event(event))
+                output_check = True
+        if not output_check:
+            print("No activity found")
+
+
+if __name__ == "__main__":
+
+    print_activity()
     
