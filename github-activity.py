@@ -14,11 +14,14 @@ def get_user_profile(username):
 def print_user_profile(profile):
     print("===== GitHub User Profile =====")
     print(f"{'Name:':<10} {profile["name"]}")
-    print(f"{'Bio:':<10} {profile["bio"]}")
-    print(f"{'Location:':<10} {profile["location"]}")
+    if profile["bio"] == None: pass 
+    else: print(f"{'Bio:':<10} {profile["bio"]}") 
+    if profile["location"] == None: pass 
+    else: print(f"{'Location:':<10} {profile["location"]}")
     print(f"{'Repos:':<10} {profile["public_repos"]}")
     print(f"{'Followers:':<10} {profile["followers"]}")
-    print(f"{'Blog:':<10} {profile["blog"]}")
+    if profile["blog"] == "": pass 
+    else: print(f"{'Blog:':<10} {profile["blog"]}")
     print("================================")
 
 
