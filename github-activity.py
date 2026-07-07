@@ -17,7 +17,7 @@ username = args[1]
 user_info = get_user_info(username)
 
 
-#print(json.dumps(user_info[0], indent=4))
+
 if user_info:
     for event in user_info:
-        print(event["type"])
+        print(json.dumps(event, indent=4))
