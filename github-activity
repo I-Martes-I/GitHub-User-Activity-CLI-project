@@ -3,6 +3,7 @@ import urllib.request
 import json
 import datetime
 
+#   Retrieves user's profile
 def get_user_profile(username):
     url = f"https://api.github.com/users/{username}"
     try:
@@ -12,6 +13,7 @@ def get_user_profile(username):
         print(f"An error occurred: {err}")
         return None
 
+#   Prints user's profile
 def print_user_profile(profile):
     print("======== GitHub User Profile ========")
     print(f"{'Name:':<10} {profile['name'] or profile['login']}")
@@ -22,6 +24,7 @@ def print_user_profile(profile):
     print(f"{'Following:':<10} {profile["following"]}")
     if profile["blog"]: print(f"{'Blog:':<10} {profile["blog"]}")
 
+#   Retrieves user activity
 def get_user_info(username):
     json_cache = load_cache(username)
     if json_cache:
@@ -37,13 +40,18 @@ def get_user_info(username):
             print(f"An error occurred: {err}")
             return None
 
+#   Prints all the activity
 def print_user_info(info):
+    if not info:
+        print("No activity found")
+        return
     print("=========== User Activity ===========")
     for event in info:
         result = format_event(event)
         if result:
             print(result)
 
+#   Prints a unique message for each event type
 def format_event(event):
     event_type = event["type"]
     repo_name = event["repo"]["name"]
@@ -101,6 +109,7 @@ def format_event(event):
     else:
         return None
 
+#   Print profile data with all activity, or filtered activity only
 def print_activity():
     args = sys.argv
 
@@ -113,7 +122,8 @@ def print_activity():
     if len(args) == 2:
         user_profile = get_user_profile(username)
         user_info = get_user_info(username)
-        print_user_profile(user_profile)
+        if user_profile: print_user_profile(user_profile)
+        else: print(f"Could NOT find user named {username}")
         print_user_info(user_info)
         if not user_info:
             print("No activity found")
@@ -122,14 +132,16 @@ def print_activity():
         command = args[2]
         user_info = get_user_info(username)
         output_check = False
-        print(f"=========== User {command} Activity ===========")
         for event in user_info:
             if event["type"].lower() == command.lower():
+                if not output_check:
+                    print(f"=========== User {command} Activity ===========")
                 print(format_event(event))
                 output_check = True
         if not output_check:
             print("No activity found")
 
+#   Save new data to JSON file
 def save_cache(username, data):
     cache = {
         "timestamp": datetime.datetime.now().isoformat(),
@@ -138,6 +150,7 @@ def save_cache(username, data):
     with open(f"cache_{username}.json", "w") as f:
         json.dump(cache, f, indent=4)
 
+#   Load an existing file or create a new one for the user
 def load_cache(username):
     try:
         with open(f"cache_{username}.json", "r") as f:
@@ -157,10 +170,6 @@ def load_cache(username):
     except json.JSONDecodeError:
         return None
 
-
+#   Main
 if __name__ == "__main__":
-
     print_activity()
-
-
-    
