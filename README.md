@@ -51,3 +51,72 @@ github-activity <username> <event>  # Filter activity by event type
 ## Caching
 
 Results are cached locally in a `cache_<username>.json` file for 5 minutes. This means repeated calls with the same username won't make unnecessary API requests. After 5 minutes the cache expires and fresh data is fetched from GitHub.
+
+## Examples
+
+Input:
+```bash
+github-activity AsabenehBlaBlaBla
+```
+Output:
+```bash
+User 'AsabenehBlaBlaBla' not found.
+```
+
+Input:
+```bash
+github-activity Asabeneh
+```
+Output:
+```bash
+======== GitHub User Profile ========
+Name:      Asabeneh
+Bio:        🌐 Fullstack Engineer🌱 Educator 📘 Content creator 📈 Data Analyst |
+I create jargon-free, easy to read and understand educational material
+Location:  Helsinki, Finland
+Repos:     192
+Followers: 21597
+Following: 21
+Blog:      https://www.asabeneh.com
+=========== User Activity ===========
+- Starred wix/react-native-ui-lib
+- Pushed to Asabeneh/30-Days-Of-AI-Engineering
+- Starred SYSTRAN/faster-whisper
+- Pushed to Asabeneh/30-Days-Of-AI-Engineering
+- Pushed to Asabeneh/30-Days-Of-AI-Engineering
+...
+```
+
+Input:
+```bash
+github-activity Asabeneh BlaBlaBla
+```
+Output:
+```bash
+Unknown event type 'BlaBlaBla'.
+Valid events: PushEvent, CommitCommentEvent, CreateEvent, DeleteEvent, DiscussionEvent, ForkEvent, GollumEvent, IssueCommentEvent, IssuesEvent, MemberEvent, PublicEvent, PullRequestEvent, PullRequestReviewEvent, PullRequestReviewCommentEvent, ReleaseEvent, WatchEvent
+```
+
+Input:
+```bash
+github-activity Asabeneh PushEvent
+```
+
+Output:
+```bash
+=========== User PushEvent Activity ===========
+- Pushed to Asabeneh/30-Days-Of-AI-Engineering
+- Pushed to Asabeneh/30-Days-Of-AI-Engineering
+- Pushed to Asabeneh/30-Days-Of-AI-Engineering
+...
+```
+
+Input:
+```bash
+github-activity Asabeneh CreateEvent
+```
+Output:
+```bash
+=========== User CreateEvent Activity ===========
+- Created branch 'main' in Asabeneh/30-Days-Of-AI-Engineering
+```
